@@ -7,12 +7,6 @@ class Body extends StatelessWidget {
         child: Column(
       children: [
         ElevatedButton(
-          child: Text('List add'),
-          onPressed: () {
-            Navigator.pushNamed(context, "/ListAdd");
-          },
-        ),
-        ElevatedButton(
           child: Text('List view'),
           onPressed: () {
             Navigator.pushNamed(context, "/ListView");
