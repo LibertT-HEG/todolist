@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/screens/home/components/body.dart';
+import 'package:todolist/screens/home/components/add_list_button.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -14,6 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text('Home page'),
       ),
       body: Body(),
+      floatingActionButton: AddListButton(),
     );
   }
 }
