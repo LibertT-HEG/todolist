@@ -13,7 +13,7 @@ class Body extends StatelessWidget {
             child: new Text('long information text'),
           ),
         ],
-      ),
+      )
     );
   }
 }
