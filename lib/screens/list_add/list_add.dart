@@ -1,5 +1,6 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:todolist/screens/list_add/components/body.dart';
+import 'package:todolist/screens/list_add/components/MyCustomForm.dart';
 
 class ListAddScreen extends StatefulWidget {
   @override
@@ -7,13 +8,43 @@ class ListAddScreen extends StatefulWidget {
 }
 
 class _ListAddScreenState extends State<ListAddScreen> {
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Ajouter une liste'),
-      ),
-      body: Body(),
+    return FutureBuilder(
+        // Initialize FlutterFire:
+        future: _initialization,
+        builder: (context, snapshot) {
+      // Check for errors
+      if (snapshot.hasError) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Ajouter une liste'),
+          ),
+          body: MyCustomForm(),
+        );
+      }
+
+      // Once complete, show your application
+      if (snapshot.connectionState == ConnectionState.done) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Ajouter une liste'),
+          ),
+          body: MyCustomForm(),
+
+        );
+      }
+
+      // Otherwise, show something whilst waiting for initialization to complete
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Ajouter une liste'),
+        ),
+        body: MyCustomForm(),
+
+      );
+    },
     );
   }
 }
