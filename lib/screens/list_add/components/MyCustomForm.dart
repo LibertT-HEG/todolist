@@ -1,7 +1,9 @@
-import 'package:firebase_core/firebase_core.dart';
+import 'package:date_field/date_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:todolist/screens/list_add/list_add.dart';
+import 'package:todolist/screens/task_add/task_add.dart';
 
 // Define a custom Form widget.
 class MyCustomForm extends StatefulWidget {
@@ -16,7 +18,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
   // Create a text controller and use it to retrieve the current value
   // of the TextField.
   final myController = TextEditingController();
-  String titre;
+  Todo todo = new Todo("test", DateTime.now());
 
   @override
   void dispose() {
@@ -34,28 +36,55 @@ class _MyCustomFormState extends State<MyCustomForm> {
       // Call the lists CollectionReference to add a new list
       return listes
           .add({
-        'titre': this.titre
+        'nom': this.todo.title,
+        'deadLine' : this.todo.dLine,
       })
           .then((value) => print("List Added"))
           .catchError((error) => print("Failed to add list: $error"));
     }
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: TextFormField(
-          controller: myController,
-          decoration: const InputDecoration(
-            icon: Icon(Icons.person),
-            hintText: 'Example: Trip to LA',
-            labelText: 'Titre *',
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children:[
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: TextFormField(
+              controller: myController,
+              decoration: const InputDecoration(
+                hintText: 'Example: Trip to LA',
+                labelText: 'Titre *',
+              ),
+            ),
           ),
-        ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: DateTimeField(
+              decoration: const InputDecoration(
+                labelText: 'Deadline',
+              ),
+              onDateSelected: (DateTime value) {
+                setState(() {
+                  this.todo.dLine = value;
+                });
+              },
+              firstDate: DateTime.now(),
+              selectedDate: this.todo.dLine,
+            ),
+          ),
+        ]
       ),
       floatingActionButton: FloatingActionButton(
         // When the user presses the button, show an alert dialog containing the
         // text that the user has entered into the text field.
         onPressed: () {
-          this.titre = this.myController.text;
+          this.todo.title = this.myController.text;
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TaskAddScreen(todo: this.todo),
+            ),
+          );
           return addList();
         },
         tooltip: 'Show me the value!',
@@ -65,4 +94,3 @@ class _MyCustomFormState extends State<MyCustomForm> {
 
   }
 }
-

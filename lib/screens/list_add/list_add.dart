@@ -19,9 +19,9 @@ class _ListAddScreenState extends State<ListAddScreen> {
       if (snapshot.hasError) {
         return Scaffold(
           appBar: AppBar(
-            title: Text('Ajouter une liste'),
+            title: Text('Error'),
           ),
-          body: MyCustomForm(),
+          body: Text('Error'),
         );
       }
 
@@ -39,12 +39,21 @@ class _ListAddScreenState extends State<ListAddScreen> {
       // Otherwise, show something whilst waiting for initialization to complete
       return Scaffold(
         appBar: AppBar(
-          title: Text('Ajouter une liste'),
+          title: Text('Please wait'),
         ),
-        body: MyCustomForm(),
-
+        body: Text('Please wait'),
       );
     },
     );
+  }
+}
+
+class Todo {
+  String title;
+  DateTime dLine;
+
+  Todo(String title, DateTime dLine) {
+    this.title = title;
+    this.dLine = dLine;
   }
 }
