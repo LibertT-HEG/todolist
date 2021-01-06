@@ -8,7 +8,7 @@ class Body extends StatelessWidget {
   double fsPetitText = 15;
   FontWeight fwPetitText = FontWeight.w300;
   String version = "Version 0.1.1";
-  String copyright = "© 2020-2021 ToutDouxListe Inc.";
+  String copyright = '© 2020-' + DateTime.now().year.toString() + ' ToutDouxListe Inc.';
 
   //Style grand texte
   double fsGrandText = 20;
