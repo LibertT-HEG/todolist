@@ -67,6 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           )
                         ]),
                     floatingActionButton: AddListButton(),
+                    backgroundColor: Colors.grey.shade300,
                     body: ListView(
                         padding: const EdgeInsets.all(15),
                         children: [Column(children: listes)]));

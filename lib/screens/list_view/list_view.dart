@@ -12,14 +12,11 @@ class ListViewScreen extends StatefulWidget {
 
 class _ListViewScreenState extends State<ListViewScreen> {
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
-
   @override
   Widget build(BuildContext context) {
-    final String listId = ModalRoute.of(context).settings.arguments;
-
     CollectionReference taches = FirebaseFirestore.instance
         .collection('Listes')
-        .doc(listId)
+        .doc("1g2aoT5qPaZ2NVnuakGZ")
         .collection("Taches");
     taches.snapshots(includeMetadataChanges: true);
     return FutureBuilder(

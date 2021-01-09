@@ -3,11 +3,13 @@ import 'package:todolist/routes.dart';
 import 'package:todolist/theme/style.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Intl.defaultLocale = "fr_FR";
-  await Firebase.initializeApp();
+  initializeDateFormatting();
+  Firebase.initializeApp();
   runApp(MyApp());
 }
 

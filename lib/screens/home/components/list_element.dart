@@ -21,7 +21,6 @@ class _ListElementState extends State<ListElement> {
   Widget build(BuildContext context) {
     return Card(
         margin: const EdgeInsets.only(bottom: 10),
-        color: Colors.grey.withAlpha(10),
         child: InkWell(
             splashColor: Colors.blue.withAlpha(30),
             onTap: () {
@@ -30,7 +29,10 @@ class _ListElementState extends State<ListElement> {
             },
             child: Column(children: <Widget>[
               ListTile(
-                title: Text(widget.listName),
+                title: Text(
+                  widget.listName,
+                  style: TextStyle(fontSize: 20),
+                ),
                 subtitle: Text('Dead line: ' +
                     DateFormat('dd MMMM yy à kk:mm')
                         .format(widget.listDeadLine)),
