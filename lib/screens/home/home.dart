@@ -20,10 +20,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     listes.snapshots(includeMetadataChanges: true);
 
-    final listElements = <Widget>[];
-
-    listElements.add(new TempNav());
-
     return FutureBuilder(
       // Initialize FlutterFire:
       future: _initialization,
@@ -57,22 +53,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   return Text("Loading");
                 }
 
-                for (var i = 0; i < 15; i++) {
-                  listElements.add(new ListElement(
-                      listId: i.toString(),
-                      listName: "To do liste " + i.toString(),
-                      listDeadLine: DateTime
-                          .now())); // TODO: Mettre la date de la dead line
-                }
-
                 return new ListView(
                     padding: const EdgeInsets.all(15),
                     children:
                         snapshot.data.docs.map((DocumentSnapshot document) {
                       return new ListElement(
-                          listId: document.data()['num'],
+                          listId: document.id,
                           listName: document.data()['nom'],
-                          listDeadLine: DateTime.now());
+                          listDeadLine: document.data()['deadLine'].toDate());
                     }).toList());
               },
             ),

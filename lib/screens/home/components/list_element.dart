@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ListElement extends StatelessWidget {
   final String listId;
@@ -18,11 +19,18 @@ class ListElement extends StatelessWidget {
           Navigator.pushNamed(context, "/ListView", arguments: listId);
         },
         child: Container(
-            height: 80,
             margin: const EdgeInsets.only(bottom: 5),
+            padding: const EdgeInsets.all(5),
             color: Colors.blueAccent,
-            child: Row(
-              children: [Text(this.listName)],
+            child: Column(
+              children: [
+                Text(this.listName == null ? "LISTNAME" : this.listName),
+                Text(this.listDeadLine == null
+                    ? "LISTDEADLINE"
+                    : 'Deadline: ' +
+                        DateFormat('yyyy-MM-dd – kk:mm')
+                            .format(this.listDeadLine)),
+              ],
             )));
   }
 }

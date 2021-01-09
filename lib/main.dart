@@ -3,7 +3,9 @@ import 'package:todolist/routes.dart';
 import 'package:todolist/theme/style.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -19,7 +21,8 @@ class MyApp extends StatelessWidget {
       builder: (context, snapshot) {
         // Check for errors
         if (snapshot.hasError) {
-          return MaterialApp( // TODO: une nouvelle page d'error
+          return MaterialApp(
+            // TODO: une nouvelle page d'error
             title: 'ToutDoux Liste',
             theme: appTheme(),
             initialRoute: '/',
@@ -38,7 +41,8 @@ class MyApp extends StatelessWidget {
         }
 
         // Otherwise, show something whilst waiting for initialization to complete
-        return MaterialApp( // TODO: une nouvelle loading page
+        return MaterialApp(
+          // TODO: une nouvelle loading page
           title: 'ToutDoux Liste',
           theme: appTheme(),
           initialRoute: '/',
