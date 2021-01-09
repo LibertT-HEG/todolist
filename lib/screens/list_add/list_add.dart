@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:todolist/screens/list_add/components/MyCustomForm.dart';
@@ -51,9 +52,11 @@ class _ListAddScreenState extends State<ListAddScreen> {
 class Todo {
   String title;
   DateTime dLine;
+  DocumentReference documentReference;
 
   Todo(String title, DateTime dLine) {
     this.title = title;
     this.dLine = dLine;
+    this.documentReference = null;
   }
 }

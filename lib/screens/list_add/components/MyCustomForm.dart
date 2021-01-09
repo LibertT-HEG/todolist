@@ -34,8 +34,9 @@ class _MyCustomFormState extends State<MyCustomForm> {
 
     Future<void> addList() {
       // Call the lists CollectionReference to add a new list
-      return listes
-          .add({
+      DocumentReference documentReference = listes.doc();
+      this.todo.documentReference = documentReference;
+      return documentReference.set({
         'nom': this.todo.title,
         'deadLine' : this.todo.dLine,
       })
