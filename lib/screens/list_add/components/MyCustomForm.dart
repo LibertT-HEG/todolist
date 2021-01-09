@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:todolist/screens/list_add/list_add.dart';
-import 'package:todolist/screens/task_add/task_add.dart';
+import 'package:todolist/screens/list_view/list_view.dart';
 
 // Define a custom Form widget.
 class MyCustomForm extends StatefulWidget {
@@ -83,7 +83,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => TaskAddScreen(todo: this.todo),
+              builder: (context) => ListViewScreen(todo: this.todo),
             ),
           );
           return addList();
