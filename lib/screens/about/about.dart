@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/screens/about/components/body.dart';
+import 'package:todolist/screens/about/components/bodyLandscape.dart';
 
 class AboutScreen extends StatefulWidget {
   @override
@@ -13,7 +14,15 @@ class _AboutScreenState extends State<AboutScreen> {
       appBar: AppBar(
         title: Text('A propos'),
       ),
-      body: Body(),
+      body: OrientationBuilder(
+        builder: (context, orientation){
+          if(orientation == Orientation.portrait){
+            return Body();
+          } else {
+            return BodyLandscape();
+          }
+        },
+      ),
     );
   }
 }
