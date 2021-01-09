@@ -10,7 +10,8 @@ class TempNav extends StatelessWidget {
           child: ElevatedButton(
             child: Text('List view'),
             onPressed: () {
-              Navigator.pushNamed(context, "/ListView");
+              Navigator.pushNamed(context, "/ListView",
+                  arguments: "1g2aoT5qPaZ2NVnuakGZ");
             },
           ),
         ),
