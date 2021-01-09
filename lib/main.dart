@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:todolist/routes.dart';
 import 'package:todolist/theme/style.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:intl/intl.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Intl.defaultLocale = "fr_FR";
   await Firebase.initializeApp();
   runApp(MyApp());
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/screens/home/components/add_list_button.dart';
 import 'package:todolist/screens/home/components/list_element.dart';
-import 'package:todolist/screens/home/components/temp_nav.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -36,12 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text('My todo lists'),
-            ),
-            floatingActionButton: AddListButton(),
-            body: StreamBuilder<QuerySnapshot>(
+          return StreamBuilder<QuerySnapshot>(
               stream: listes.snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -53,18 +47,30 @@ class _HomeScreenState extends State<HomeScreen> {
                   return Text("Loading");
                 }
 
-                return new ListView(
-                    padding: const EdgeInsets.all(15),
-                    children:
-                        snapshot.data.docs.map((DocumentSnapshot document) {
-                      return new ListElement(
-                          listId: document.id,
-                          listName: document.data()['nom'],
-                          listDeadLine: document.data()['deadLine'].toDate());
-                    }).toList());
-              },
-            ),
-          );
+                List<ListElement> listes =
+                    snapshot.data.docs.map((DocumentSnapshot document) {
+                  return new ListElement(
+                      listId: document.id,
+                      listName: document.data()['nom'],
+                      listDeadLine: document.data()['deadLine'].toDate());
+                }).toList();
+
+                return Scaffold(
+                    appBar: AppBar(
+                        title: Text('Mes todo listes'),
+                        actions: <Widget>[
+                          IconButton(
+                            icon: Icon(Icons.info),
+                            onPressed: () {
+                              Navigator.pushNamed(context, "/About");
+                            },
+                          )
+                        ]),
+                    floatingActionButton: AddListButton(),
+                    body: ListView(
+                        padding: const EdgeInsets.all(15),
+                        children: [Column(children: listes)]));
+              });
         }
 
         // Otherwise, show something whilst waiting for initialization to complete

@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class ListElement extends StatelessWidget {
-  final String listId;
-  final String listName;
-  final DateTime listDeadLine;
+class ListElement extends StatefulWidget {
+  String listId;
+  String listName;
+  DateTime listDeadLine;
 
-  const ListElement({
+  ListElement({
     this.listId,
     this.listName,
     this.listDeadLine,
   });
 
+  @override
+  State<StatefulWidget> createState() => _ListElementState();
+}
+
+class _ListElementState extends State<ListElement> {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -20,16 +25,15 @@ class ListElement extends StatelessWidget {
         child: InkWell(
             splashColor: Colors.blue.withAlpha(30),
             onTap: () {
-              Navigator.pushNamed(context, "/ListView", arguments: listId);
+              Navigator.pushNamed(context, "/ListView",
+                  arguments: widget.listId);
             },
             child: Column(children: <Widget>[
               ListTile(
-                title: Text(this.listName == null ? "LISTNAME" : this.listName),
-                subtitle: Text(this.listDeadLine == null
-                    ? "LISTDEADLINE"
-                    : 'Deadline: ' +
-                        DateFormat('yyyy-MM-dd – kk:mm')
-                            .format(this.listDeadLine)),
+                title: Text(widget.listName),
+                subtitle: Text('Dead line: ' +
+                    DateFormat('dd MMMM yy à kk:mm')
+                        .format(widget.listDeadLine)),
               )
             ])));
   }
