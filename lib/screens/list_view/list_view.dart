@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:date_field/date_field.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -13,7 +12,7 @@ class ListViewScreen extends StatefulWidget {
 class _ListViewScreenState extends State<ListViewScreen> {
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
   final _formKey = GlobalKey<FormState>();
-  Task _task = new Task(null, DateTime.now());
+  Task _task = new Task(null);
 
   Widget _buildName() {
     return TextFormField(
@@ -32,24 +31,6 @@ class _ListViewScreenState extends State<ListViewScreen> {
     );
   }
 
-  Widget _buildDeadLine() {
-    return DateTimeFormField(
-      initialValue: DateTime.now(),
-      decoration: const InputDecoration(
-        labelText: 'Deadline',
-      ),
-      onDateSelected: (DateTime value) {
-        setState(() {
-          _task.deadLine = value;
-        });
-      },
-      firstDate: DateTime.now(),
-      onSaved: (DateTime value) {
-        _task.deadLine = value;
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
 
@@ -64,12 +45,11 @@ class _ListViewScreenState extends State<ListViewScreen> {
     .collection('Listes');
 
     Future<void> addTask() {
-      // Call the user's CollectionReference to add a new user
+      // Call the Taches CollectionReference to add a new tache
       return taches
           .add({
-        'nom': _task.nom, // John Doe
-        'deadLine': _task.deadLine, // Stokes and Sons
-        'fait': _task.fait // 42
+        'nom': _task.nom,
+        'fait': _task.fait
       })
           .then((value) => print("Task Added"))
           .catchError((error) => print("Failed to add Task: $error"));
@@ -157,15 +137,12 @@ class _ListViewScreenState extends State<ListViewScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             _buildName(),
-                            _buildDeadLine(),
-                            //_buildDline(),
                             RaisedButton(
                               child: Text("Ajouter"),
                               onPressed: () {
                                 if (_formKey.currentState.validate()) {
                                   _formKey.currentState.save();
                                   print(_task.nom);
-                                  print(_task.deadLine);
                                   print(args);
                                   addTask();
                                   Navigator.pop(context);
@@ -190,12 +167,10 @@ class _ListViewScreenState extends State<ListViewScreen> {
 
 class Task {
   String nom;
-  DateTime deadLine;
   bool fait;
 
-  Task(String nom, DateTime deadLine){
+  Task(String nom){
     this.nom = nom;
-    this.deadLine = deadLine;
     this.fait = false;
   }
 }
