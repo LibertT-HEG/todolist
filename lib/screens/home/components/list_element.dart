@@ -14,23 +14,23 @@ class ListElement extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new GestureDetector(
-        onTap: () {
-          Navigator.pushNamed(context, "/ListView", arguments: listId);
-        },
-        child: Container(
-            margin: const EdgeInsets.only(bottom: 5),
-            padding: const EdgeInsets.all(5),
-            color: Colors.blueAccent,
-            child: Column(
-              children: [
-                Text(this.listName == null ? "LISTNAME" : this.listName),
-                Text(this.listDeadLine == null
+    return Card(
+        margin: const EdgeInsets.only(bottom: 10),
+        color: Colors.grey.withAlpha(10),
+        child: InkWell(
+            splashColor: Colors.blue.withAlpha(30),
+            onTap: () {
+              Navigator.pushNamed(context, "/ListView", arguments: listId);
+            },
+            child: Column(children: <Widget>[
+              ListTile(
+                title: Text(this.listName == null ? "LISTNAME" : this.listName),
+                subtitle: Text(this.listDeadLine == null
                     ? "LISTDEADLINE"
                     : 'Deadline: ' +
                         DateFormat('yyyy-MM-dd – kk:mm')
                             .format(this.listDeadLine)),
-              ],
-            )));
+              )
+            ])));
   }
 }
