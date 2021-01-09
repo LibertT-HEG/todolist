@@ -7,8 +7,10 @@ import 'package:todolist/screens/list_add/list_add.dart';
 import 'package:todolist/screens/task_add/task_add.dart';
 
 class ListViewScreen extends StatefulWidget {
-  final Todo todo;
-  ListViewScreen({Key key, @required this.todo}) : super(key: key);
+
+  final Todo todo; //merge
+  ListViewScreen({Key key, @required this.todo}) : super(key: key); //merge
+
 
   @override
   _ListViewScreenState createState() => _ListViewScreenState();
@@ -56,7 +58,11 @@ class _ListViewScreenState extends State<ListViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference taches = FirebaseFirestore.instance.collection('Listes').doc(widget.todo.documentReference.id).collection("Taches");
+
+    CollectionReference taches = FirebaseFirestore.instance
+        .collection('Listes')
+        .doc("1g2aoT5qPaZ2NVnuakGZ")
+        .collection("Taches");
 
     Future<void> addTask() {
       // Call the user's CollectionReference to add a new user
@@ -93,7 +99,8 @@ class _ListViewScreenState extends State<ListViewScreen> {
             ),
             body: StreamBuilder<QuerySnapshot>(
               stream: taches.snapshots(),
-              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
                   return Text('Something went wrong');
                 }
@@ -106,10 +113,12 @@ class _ListViewScreenState extends State<ListViewScreen> {
                   children: snapshot.data.docs.map((DocumentSnapshot document) {
                     return new CheckboxListTile(
                       title: Text(document.data()['nom']),
-                      subtitle: new Text('Deadline: '+DateFormat('yyyy-MM-dd – kk:mm').format(document.data()['deadLine'].toDate())),
+                      subtitle: new Text('Deadline: ' +
+                          DateFormat('yyyy-MM-dd – kk:mm')
+                              .format(document.data()['deadLine'].toDate())),
                       controlAffinity: ListTileControlAffinity.leading,
                       value: document.data()['fait'],
-                      onChanged: (bool value){
+                      onChanged: (bool value) {
                         setState(() {
                           taches.doc(document.id).update({'fait': value});
                         });

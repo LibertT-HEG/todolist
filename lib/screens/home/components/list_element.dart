@@ -1,14 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class ListElement extends StatelessWidget {
+class ListElement extends StatefulWidget {
+  String listId;
+  String listName;
+  DateTime listDeadLine;
+
+  ListElement({
+    this.listId,
+    this.listName,
+    this.listDeadLine,
+  });
+
+  @override
+  State<StatefulWidget> createState() => _ListElementState();
+}
+
+class _ListElementState extends State<ListElement> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-        height: 80,
-        margin: const EdgeInsets.only(bottom: 5),
-        color: Colors.blueAccent,
-        child: Row(
-          children: [Text("To do list")],
-        ));
+    return Card(
+        margin: const EdgeInsets.only(bottom: 10),
+        child: InkWell(
+            splashColor: Colors.blue.withAlpha(30),
+            onTap: () {
+              Navigator.pushNamed(context, "/ListView",
+                  arguments: widget.listId);
+            },
+            child: Column(children: <Widget>[
+              ListTile(
+                title: Text(
+                  widget.listName,
+                  style: TextStyle(fontSize: 20),
+                ),
+                subtitle: Text('Dead line: ' +
+                    DateFormat('dd MMMM yy à kk:mm')
+                        .format(widget.listDeadLine)),
+              )
+            ])));
   }
 }
