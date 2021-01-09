@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:todolist/screens/home/components/add_list_button.dart';
 import 'package:todolist/screens/home/components/list_element.dart';
@@ -35,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
+
           return StreamBuilder<QuerySnapshot>(
               stream: listes.snapshots(),
               builder: (BuildContext context,
@@ -83,5 +85,11 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       },
     );
+
+
+
+
+
+
   }
 }

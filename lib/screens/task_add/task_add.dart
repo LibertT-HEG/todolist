@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:todolist/screens/list_add/list_add.dart';
+import 'package:todolist/screens/list_view/list_view.dart';
 
 import 'components/list_task.dart';
 
@@ -153,17 +154,5 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
           child: Icon(Icons.add, color: Color(0xFFFFFFFF),),
         ),
     );
-  }
-}
-
-class Task {
-  String nom;
-  DateTime deadLine;
-  bool fait;
-
-  Task(String nom, DateTime deadLine){
-    this.nom = nom;
-    this.deadLine = deadLine;
-    this.fait = false;
   }
 }
