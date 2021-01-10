@@ -7,16 +7,6 @@ import 'package:todolist/screens/list_view/list_view.dart';
 
 // Define a custom Form widget.
 class MyCustomForm extends StatefulWidget {
-  String listId;
-  String nom;
-  DateTime deadLine;
-
-  MyCustomForm({
-    this.listId,
-    this.nom,
-    this.deadLine,
-  });
-
   @override
   _MyCustomFormState createState() => _MyCustomFormState();
 }
@@ -27,7 +17,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
   // Create a text controller and use it to retrieve the current value
   // of the TextField.
   final myController = TextEditingController();
-  DateTime dateTemp = DateTime.now();
+  Todo todo = new Todo("test", DateTime.now());
 
   @override
   void dispose() {
@@ -39,19 +29,14 @@ class _MyCustomFormState extends State<MyCustomForm> {
   @override
   Widget build(BuildContext context) {
     // Create a CollectionReference called users that references the firestore collection
-    CollectionReference listes = FirebaseFirestore.instance.collection('Listes');
-    DocumentReference documentReference = listes.doc();
+    CollectionReference listes =
+        FirebaseFirestore.instance.collection('Listes');
 
-    Future<void> addList(MyCustomForm argum) {
+    Future<void> addList() {
       // Call the lists CollectionReference to add a new list
-
-
+      DocumentReference documentReference = listes.doc();
+      this.todo.documentReference = documentReference;
       return documentReference.set({
-        'nom': argum.nom,
-        'deadLine' : argum.deadLine,
-      })
-          .then((value) => print("List Added"))
-          .catchError((error) => print("Failed to add list: $error"));
         'nom': this.todo.title,
         'deadLine': this.todo.dLine,
       });
@@ -70,19 +55,6 @@ class _MyCustomFormState extends State<MyCustomForm> {
               labelText: 'Titre *',
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: DateTimeField(
-              decoration: const InputDecoration(
-                labelText: 'Deadline',
-              ),
-              onDateSelected: (DateTime value) {
-                setState(() {
-                  dateTemp = value;
-                });
-              },
-              firstDate: DateTime.now(),
-              selectedDate: dateTemp,
         ),
         Padding(
           padding: const EdgeInsets.all(16.0),
@@ -104,16 +76,11 @@ class _MyCustomFormState extends State<MyCustomForm> {
         // When the user presses the button, show an alert dialog containing the
         // text that the user has entered into the text field.
         onPressed: () {
-
-
-          MyCustomForm argum = new MyCustomForm(
-              listId: documentReference.id,
-              nom: this.myController.text,
-              deadLine: dateTemp);
+          this.todo.title = this.myController.text;
 
           addList().then((value) => {
                 Navigator.popAndPushNamed(context, "/ListView",
-                    arguments: argum.listId)
+                    arguments: this.todo.documentReference.id)
               });
         },
         tooltip: 'Ajouter',
