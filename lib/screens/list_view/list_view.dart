@@ -103,20 +103,34 @@ class _ListViewScreenState extends State<ListViewScreen> {
               return Text("Loading");
             }
 
-            return new ListView(
-              children: snapshot.data.docs.map((DocumentSnapshot document) {
-                return new CheckboxListTile(
-                  title: Text(document.data()['nom']),
-                  controlAffinity: ListTileControlAffinity.leading,
-                  value: document.data()['fait'],
-                  onChanged: (bool value) {
-                    setState(() {
-                      taches.doc(document.id).update({'fait': value});
-                    });
-                  },
-                  activeColor: Colors.green,
-                );
-              }).toList(),
+            return Text('Please wait');
+          }
+        ),
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: taches.snapshots(),
+        builder: (BuildContext context,
+          AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Text("Loading");
+        }
+
+        return new ListView(
+          children: snapshot.data.docs.map((DocumentSnapshot document) {
+            return new CheckboxListTile(
+              title: Text(document.data()['nom']),
+              controlAffinity: ListTileControlAffinity.leading,
+              value: document.data()['fait'],
+              onChanged: (bool value) {
+                setState(() {
+                  taches.doc(document.id).update({'fait': value});
+                });
+              }
+              activeColor: Colors.green,
             );
           }),
       floatingActionButton: FloatingActionButton(
