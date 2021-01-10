@@ -79,7 +79,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
           this.todo.title = this.myController.text;
 
           addList().then((value) => {
-                Navigator.pushNamed(context, "/ListView",
+                Navigator.popAndPushNamed(context, "/ListView",
                     arguments: this.todo.documentReference.id)
               });
         },

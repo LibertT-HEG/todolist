@@ -51,23 +51,46 @@ class _ListViewScreenState extends State<ListViewScreen> {
     taches.snapshots(includeMetadataChanges: true);
     return Scaffold(
       appBar: AppBar(
-        title: FutureBuilder(
-            future: listes.doc(args).get(),
-            builder: (BuildContext context,
-                AsyncSnapshot<DocumentSnapshot> snapshot) {
-              // Check for errors
-              if (snapshot.hasError) {
-                return Text('Error');
-              }
+          title: FutureBuilder(
+              future: listes.doc(args).get(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<DocumentSnapshot> snapshot) {
+                // Check for errors
+                if (snapshot.hasError) {
+                  return Text('Error');
+                }
 
-              if (snapshot.connectionState == ConnectionState.done) {
-                Map<String, dynamic> data = snapshot.data.data();
-                return Text('${data['nom']}');
-              }
+                if (snapshot.connectionState == ConnectionState.done) {
+                  Map<String, dynamic> data = snapshot.data.data();
+                  return Text('${data['nom']}');
+                }
 
-              return Text('Please wait');
-            }),
-      ),
+                return Text('Please wait');
+              }),
+          actions: [
+            FutureBuilder(
+                future: listes.doc(args).get(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<DocumentSnapshot> snapshot) {
+                  // Check for errors
+                  if (snapshot.hasError) {
+                    return Text('Error');
+                  }
+
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    Map<String, dynamic> data = snapshot.data.data();
+                    return IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        listes.doc(snapshot.data.id).delete();
+                        Navigator.pop(context);
+                      },
+                    );
+                  }
+
+                  return Text('Please wait');
+                })
+          ]),
       body: StreamBuilder<QuerySnapshot>(
           stream: taches.snapshots(),
           builder:
