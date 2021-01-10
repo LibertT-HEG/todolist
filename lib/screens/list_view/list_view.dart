@@ -91,9 +91,6 @@ class _ListViewScreenState extends State<ListViewScreen> {
           children: snapshot.data.docs.map((DocumentSnapshot document) {
             return new CheckboxListTile(
               title: Text(document.data()['nom']),
-              subtitle: new Text('Deadline: ' +
-                  DateFormat('yyyy-MM-dd – kk:mm')
-                      .format(document.data()['deadLine'].toDate())),
               controlAffinity: ListTileControlAffinity.leading,
               value: document.data()['fait'],
               onChanged: (bool value) {

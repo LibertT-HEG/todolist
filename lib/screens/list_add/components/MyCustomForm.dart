@@ -7,6 +7,16 @@ import 'package:todolist/screens/list_view/list_view.dart';
 
 // Define a custom Form widget.
 class MyCustomForm extends StatefulWidget {
+  String listId;
+  String nom;
+  DateTime deadLine;
+
+  MyCustomForm({
+    this.listId,
+    this.nom,
+    this.deadLine,
+  });
+
   @override
   _MyCustomFormState createState() => _MyCustomFormState();
 }
@@ -18,7 +28,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
   // Create a text controller and use it to retrieve the current value
   // of the TextField.
   final myController = TextEditingController();
-  Todo todo = new Todo("test", DateTime.now());
+  DateTime dateTemp = DateTime.now();
 
   @override
   void dispose() {
@@ -31,14 +41,15 @@ class _MyCustomFormState extends State<MyCustomForm> {
   Widget build(BuildContext context) {
     // Create a CollectionReference called users that references the firestore collection
     CollectionReference listes = FirebaseFirestore.instance.collection('Listes');
+    DocumentReference documentReference = listes.doc();
 
-    Future<void> addList() {
+    Future<void> addList(MyCustomForm argum) {
       // Call the lists CollectionReference to add a new list
-      DocumentReference documentReference = listes.doc();
-      this.todo.documentReference = documentReference;
+
+
       return documentReference.set({
-        'nom': this.todo.title,
-        'deadLine' : this.todo.dLine,
+        'nom': argum.nom,
+        'deadLine' : argum.deadLine,
       })
           .then((value) => print("List Added"))
           .catchError((error) => print("Failed to add list: $error"));
@@ -65,11 +76,11 @@ class _MyCustomFormState extends State<MyCustomForm> {
               ),
               onDateSelected: (DateTime value) {
                 setState(() {
-                  this.todo.dLine = value;
+                  dateTemp = value;
                 });
               },
               firstDate: DateTime.now(),
-              selectedDate: this.todo.dLine,
+              selectedDate: dateTemp,
             ),
           ),
         ]
@@ -78,15 +89,16 @@ class _MyCustomFormState extends State<MyCustomForm> {
         // When the user presses the button, show an alert dialog containing the
         // text that the user has entered into the text field.
         onPressed: () {
-          this.todo.title = this.myController.text;
 
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ListViewScreen(),
-            ),
-          );
-          return addList();
+          MyCustomForm argum = new MyCustomForm(
+              listId: documentReference.id,
+              nom: this.myController.text,
+              deadLine: dateTemp);
+
+          Navigator.pushNamed(context, "/ListView",
+          arguments: argum.listId);
+
+          return addList(argum);
         },
         tooltip: 'Show me the value!',
         child: Icon(Icons.done_rounded, color: Color(0xFFFFFFFF)),
