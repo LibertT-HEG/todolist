@@ -13,7 +13,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
   final _formKey = GlobalKey<FormState>();
   Task _task = new Task(null);
 
-  Widget _buildName(currentValue) {
+  Widget _taskForm(currentValue) {
     return TextFormField(
       initialValue: currentValue != null ? currentValue : '',
       decoration: InputDecoration(labelText: "Nom de la tâche"),
@@ -80,7 +80,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        _buildName(currentValue),
+                        _taskForm(currentValue),
                         RaisedButton(
                           child: Text("Modifier"),
                           onPressed: () {
@@ -170,7 +170,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
                               if (confirmed)
                                 {
                                   listes.doc(snapshot.data.id).delete(),
-                                  Navigator.popAndPushNamed(context, "/")
+                                  Navigator.pop(context)
                                 }
                             });
                       },
@@ -256,19 +256,16 @@ class _ListViewScreenState extends State<ListViewScreen> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            _buildName(null),
+                            _taskForm(null),
                             RaisedButton(
                               child: Text("Ajouter"),
                               onPressed: () {
                                 if (_formKey.currentState.validate()) {
                                   _formKey.currentState.save();
-                                  print(_task.nom);
-                                  print(args);
                                   addTask();
                                   Navigator.pop(context);
                                   return;
                                 }
-                                //print(_task.deadLine);
                               },
                             ),
                           ],
