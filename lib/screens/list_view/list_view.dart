@@ -13,12 +13,13 @@ class _ListViewScreenState extends State<ListViewScreen> {
   final _formKey = GlobalKey<FormState>();
   Task _task = new Task(null);
 
-  Widget _buildName() {
+  Widget _buildName(currentValue) {
     return TextFormField(
+      initialValue: currentValue != null ? currentValue : '',
       decoration: InputDecoration(labelText: "Nom de la tâche"),
       validator: (String value) {
         if (value.isEmpty) {
-          return "required";
+          return "requis";
         }
         return null;
       },
@@ -46,6 +47,56 @@ class _ListViewScreenState extends State<ListViewScreen> {
           .add({'nom': _task.nom, 'fait': _task.fait})
           .then((value) => print("Task Added"))
           .catchError((error) => print("Failed to add Task: $error"));
+    }
+
+    Future<void> deleteTask(taskId) {
+      // Call the Taches CollectionReference to add a new tache
+      return taches.doc(taskId).delete();
+    }
+
+    Future<bool> editTaskDialog(currentValue) async {
+      return showDialog<bool>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: Stack(
+                overflow: Overflow.visible,
+                children: <Widget>[
+                  Positioned(
+                    right: -40.0,
+                    top: -40.0,
+                    child: InkResponse(
+                      onTap: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      child: CircleAvatar(
+                        child: Icon(Icons.close),
+                        backgroundColor: Colors.red,
+                      ),
+                    ),
+                  ),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        _buildName(currentValue),
+                        RaisedButton(
+                          child: Text("Modifier"),
+                          onPressed: () {
+                            if (_formKey.currentState.validate()) {
+                              _formKey.currentState.save();
+                              Navigator.of(context).pop(true);
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          });
     }
 
     Future<bool> confirmDelete() async {
@@ -111,7 +162,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
                   }
 
                   if (snapshot.connectionState == ConnectionState.done) {
-                    Map<String, dynamic> data = snapshot.data.data();
+                    // Map<String, dynamic> data = snapshot.data.data();
                     return IconButton(
                       icon: Icon(Icons.delete),
                       onPressed: () {
@@ -142,20 +193,41 @@ class _ListViewScreenState extends State<ListViewScreen> {
             }
 
             return new ListView(
-              children: snapshot.data.docs.map((DocumentSnapshot document) {
-                return new CheckboxListTile(
-                  title: Text(document.data()['nom']),
-                  controlAffinity: ListTileControlAffinity.leading,
-                  value: document.data()['fait'],
-                  onChanged: (bool value) {
-                    setState(() {
-                      taches.doc(document.id).update({'fait': value});
-                    });
-                  },
-                  activeColor: Colors.green,
-                );
-              }).toList(),
-            );
+                children: snapshot.data.docs.map((DocumentSnapshot document) {
+              return Row(children: [
+                Expanded(
+                    child: GestureDetector(
+                        onLongPress: () {
+                          editTaskDialog(document.data()['nom'])
+                              .then((confirmed) => {
+                                    if (confirmed)
+                                      {
+                                        setState(() {
+                                          taches
+                                              .doc(document.id)
+                                              .update({'nom': _task.nom});
+                                        })
+                                      }
+                                  });
+                        },
+                        child: CheckboxListTile(
+                          title: Text(document.data()['nom']),
+                          controlAffinity: ListTileControlAffinity.leading,
+                          value: document.data()['fait'],
+                          onChanged: (bool value) {
+                            setState(() {
+                              taches.doc(document.id).update({'fait': value});
+                            });
+                          },
+                          activeColor: Colors.green,
+                        ))),
+                IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      deleteTask(document.id);
+                    })
+              ]);
+            }).toList());
           }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -184,7 +256,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            _buildName(),
+                            _buildName(null),
                             RaisedButton(
                               child: Text("Ajouter"),
                               onPressed: () {
