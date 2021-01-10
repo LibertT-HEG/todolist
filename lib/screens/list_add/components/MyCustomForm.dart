@@ -24,7 +24,6 @@ class MyCustomForm extends StatefulWidget {
 // Define a corresponding State class.
 // This class holds the data related to the Form.
 class _MyCustomFormState extends State<MyCustomForm> {
-
   // Create a text controller and use it to retrieve the current value
   // of the TextField.
   final myController = TextEditingController();
@@ -53,19 +52,22 @@ class _MyCustomFormState extends State<MyCustomForm> {
       })
           .then((value) => print("List Added"))
           .catchError((error) => print("Failed to add list: $error"));
+        'nom': this.todo.title,
+        'deadLine': this.todo.dLine,
+      });
+      // .then((value) => print("List Added"))
+      // .catchError((error) => print("Failed to add list: $error"));
     }
+
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children:[
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TextFormField(
-              controller: myController,
-              decoration: const InputDecoration(
-                hintText: 'Example: Trip to LA',
-                labelText: 'Titre *',
-              ),
+      body: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: TextFormField(
+            controller: myController,
+            decoration: const InputDecoration(
+              hintText: 'Exemple: Voyage à LA',
+              labelText: 'Titre *',
             ),
           ),
           Padding(
@@ -81,29 +83,42 @@ class _MyCustomFormState extends State<MyCustomForm> {
               },
               firstDate: DateTime.now(),
               selectedDate: dateTemp,
+        ),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: DateTimeField(
+            decoration: const InputDecoration(
+              labelText: 'Dead line',
             ),
+            onDateSelected: (DateTime value) {
+              setState(() {
+                this.todo.dLine = value;
+              });
+            },
+            firstDate: DateTime.now(),
+            selectedDate: this.todo.dLine,
           ),
-        ]
-      ),
+        ),
+      ]),
       floatingActionButton: FloatingActionButton(
         // When the user presses the button, show an alert dialog containing the
         // text that the user has entered into the text field.
         onPressed: () {
+
 
           MyCustomForm argum = new MyCustomForm(
               listId: documentReference.id,
               nom: this.myController.text,
               deadLine: dateTemp);
 
-          Navigator.pushNamed(context, "/ListView",
-          arguments: argum.listId);
-
-          return addList(argum);
+          addList().then((value) => {
+                Navigator.popAndPushNamed(context, "/ListView",
+                    arguments: argum.listId)
+              });
         },
-        tooltip: 'Show me the value!',
+        tooltip: 'Ajouter',
         child: Icon(Icons.done_rounded, color: Color(0xFFFFFFFF)),
       ),
     );
-
   }
 }

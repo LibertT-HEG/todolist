@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ListViewScreen extends StatefulWidget {
-
   @override
   _ListViewScreenState createState() => _ListViewScreenState();
 }
@@ -16,11 +15,9 @@ class _ListViewScreenState extends State<ListViewScreen> {
 
   Widget _buildName() {
     return TextFormField(
-      decoration: InputDecoration(
-          labelText: "Nom de la tâche"
-      ),
-      validator: (String value){
-        if(value.isEmpty){
+      decoration: InputDecoration(labelText: "Nom de la tâche"),
+      validator: (String value) {
+        if (value.isEmpty) {
           return "required";
         }
         return null;
@@ -33,7 +30,6 @@ class _ListViewScreenState extends State<ListViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     final String args = ModalRoute.of(context).settings.arguments;
 
     CollectionReference taches = FirebaseFirestore.instance
@@ -41,16 +37,13 @@ class _ListViewScreenState extends State<ListViewScreen> {
         .doc(args)
         .collection("Taches");
 
-    CollectionReference listes = FirebaseFirestore.instance
-    .collection('Listes');
+    CollectionReference listes =
+        FirebaseFirestore.instance.collection('Listes');
 
     Future<void> addTask() {
       // Call the Taches CollectionReference to add a new tache
       return taches
-          .add({
-        'nom': _task.nom,
-        'fait': _task.fait
-      })
+          .add({'nom': _task.nom, 'fait': _task.fait})
           .then((value) => print("Task Added"))
           .catchError((error) => print("Failed to add Task: $error"));
     }
@@ -58,17 +51,56 @@ class _ListViewScreenState extends State<ListViewScreen> {
     taches.snapshots(includeMetadataChanges: true);
     return Scaffold(
       appBar: AppBar(
-        title: FutureBuilder(
-          future: listes.doc(args).get(),
-          builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-            // Check for errors
+          title: FutureBuilder(
+              future: listes.doc(args).get(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<DocumentSnapshot> snapshot) {
+                // Check for errors
+                if (snapshot.hasError) {
+                  return Text('Error');
+                }
+
+                if (snapshot.connectionState == ConnectionState.done) {
+                  Map<String, dynamic> data = snapshot.data.data();
+                  return Text('${data['nom']}');
+                }
+
+                return Text('Please wait');
+              }),
+          actions: [
+            FutureBuilder(
+                future: listes.doc(args).get(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<DocumentSnapshot> snapshot) {
+                  // Check for errors
+                  if (snapshot.hasError) {
+                    return Text('Error');
+                  }
+
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    Map<String, dynamic> data = snapshot.data.data();
+                    return IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        listes.doc(snapshot.data.id).delete();
+                        Navigator.pop(context);
+                      },
+                    );
+                  }
+
+                  return Text('Please wait');
+                })
+          ]),
+      body: StreamBuilder<QuerySnapshot>(
+          stream: taches.snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
-              return Text('Error');
+              return Text('Something went wrong');
             }
 
-            if (snapshot.connectionState == ConnectionState.done) {
-              Map<String, dynamic> data = snapshot.data.data();
-              return Text('${data['nom']}');
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Text("Loading");
             }
 
             return Text('Please wait');
@@ -97,15 +129,10 @@ class _ListViewScreenState extends State<ListViewScreen> {
                 setState(() {
                   taches.doc(document.id).update({'fait': value});
                 });
-              },
+              }
               activeColor: Colors.green,
-
             );
-          }).toList(),
-        );
-
-      }
-      ),
+          }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showDialog(
@@ -156,7 +183,10 @@ class _ListViewScreenState extends State<ListViewScreen> {
                 );
               });
         },
-        child: Icon(Icons.add, color: Color(0xFFFFFFFF),),
+        child: Icon(
+          Icons.add,
+          color: Color(0xFFFFFFFF),
+        ),
       ),
     );
   }
@@ -166,7 +196,7 @@ class Task {
   String nom;
   bool fait;
 
-  Task(String nom){
+  Task(String nom) {
     this.nom = nom;
     this.fait = false;
   }
