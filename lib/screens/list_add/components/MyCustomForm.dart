@@ -83,7 +83,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ListViewScreen(todo: this.todo),
+              builder: (context) => ListViewScreen(),
             ),
           );
           return addList();
