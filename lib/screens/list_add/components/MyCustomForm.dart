@@ -17,6 +17,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
   // Create a text controller and use it to retrieve the current value
   // of the TextField.
   final myController = TextEditingController();
+  final myTags = TextEditingController();
   Todo todo = new Todo("test", DateTime.now());
 
   @override
@@ -39,6 +40,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
       return documentReference.set({
         'nom': this.todo.title,
         'deadLine': this.todo.dLine,
+        'tags': this.todo.tags
       });
       // .then((value) => print("List Added"))
       // .catchError((error) => print("Failed to add list: $error"));
@@ -71,13 +73,23 @@ class _MyCustomFormState extends State<MyCustomForm> {
             selectedDate: this.todo.dLine,
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: TextFormField(
+            controller: myTags,
+            decoration: const InputDecoration(
+              hintText: 'Ex: Ecole, Important, A faire...',
+              labelText: 'Tags',
+            ),
+          ),
+        ),
       ]),
       floatingActionButton: FloatingActionButton(
         // When the user presses the button, show an alert dialog containing the
         // text that the user has entered into the text field.
         onPressed: () {
           this.todo.title = this.myController.text;
-
+          this.todo.tags = this.myTags.text.split(', ');
           addList().then((value) => {
                 Navigator.popAndPushNamed(context, "/ListView",
                     arguments: this.todo.documentReference.id)
