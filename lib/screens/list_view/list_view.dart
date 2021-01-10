@@ -48,6 +48,39 @@ class _ListViewScreenState extends State<ListViewScreen> {
           .catchError((error) => print("Failed to add Task: $error"));
     }
 
+    Future<bool> confirmDelete() async {
+      return showDialog<bool>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Supprimer la liste'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text('Êtes-vous sûr-e de vouloir supprimer la liste ?'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Annuler'),
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+              ),
+              TextButton(
+                child: Text('Supprimer'),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     taches.snapshots(includeMetadataChanges: true);
     return Scaffold(
       appBar: AppBar(
@@ -82,8 +115,13 @@ class _ListViewScreenState extends State<ListViewScreen> {
                     return IconButton(
                       icon: Icon(Icons.delete),
                       onPressed: () {
-                        listes.doc(snapshot.data.id).delete();
-                        Navigator.pop(context);
+                        confirmDelete().then((confirmed) => {
+                              if (confirmed)
+                                {
+                                  listes.doc(snapshot.data.id).delete(),
+                                  Navigator.popAndPushNamed(context, "/")
+                                }
+                            });
                       },
                     );
                   }
