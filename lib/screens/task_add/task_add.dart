@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:todolist/screens/list_add/list_add.dart';
+import 'package:todolist/screens/list_view/list_view.dart';
 
 import 'components/list_task.dart';
 
@@ -18,11 +19,7 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
 
   final _formKey = GlobalKey<FormState>();
 
-  Task _task = new Task(null, DateTime.now());
-
-
-
-
+  Task _task = new Task(null);
 
   Widget _buildName() {
     return TextFormField(
@@ -56,23 +53,6 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
     );
   }*/
 
-  Widget _buildDeadLine() {
-    return DateTimeFormField(
-      initialValue: DateTime.now(),
-      decoration: const InputDecoration(
-        labelText: 'Deadline',
-      ),
-      onDateSelected: (DateTime value) {
-        setState(() {
-          _task.deadLine = value;
-        });
-      },
-      firstDate: DateTime.now(),
-      onSaved: (DateTime value) {
-        _task.deadLine = value;
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,9 +62,8 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
       // Call the user's CollectionReference to add a new user
       return liste
           .add({
-        'nom': _task.nom, // John Doe
-        'deadLine': _task.deadLine, // Stokes and Sons
-        'fait': _task.fait // 42
+        'nom': _task.nom,
+        'fait': _task.fait,
       })
           .then((value) => print("Task Added"))
           .catchError((error) => print("Failed to add Task: $error"));
@@ -125,15 +104,12 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               _buildName(),
-                              _buildDeadLine(),
-                              //_buildDline(),
                               RaisedButton(
                                 child: Text("Ajouter"),
                                 onPressed: () {
                                   if (_formKey.currentState.validate()) {
                                     _formKey.currentState.save();
                                     print(_task.nom);
-                                    print(_task.deadLine);
                                     print(widget.todo.documentReference);
                                     addTask();
                                     Navigator.pop(context);
@@ -153,17 +129,5 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
           child: Icon(Icons.add, color: Color(0xFFFFFFFF),),
         ),
     );
-  }
-}
-
-class Task {
-  String nom;
-  DateTime deadLine;
-  bool fait;
-
-  Task(String nom, DateTime deadLine){
-    this.nom = nom;
-    this.deadLine = deadLine;
-    this.fait = false;
   }
 }
