@@ -52,11 +52,17 @@ class _ListAddScreenState extends State<ListAddScreen> {
 class Todo {
   String title;
   DateTime dLine;
+  List<String> tags;
   DocumentReference documentReference;
 
   Todo(String title, DateTime dLine) {
     this.title = title;
     this.dLine = dLine;
+    this.tags = [];
     this.documentReference = null;
+  }
+
+  add_tags(String tag) {
+    this.tags.add(tag);
   }
 }

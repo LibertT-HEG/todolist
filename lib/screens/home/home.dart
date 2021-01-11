@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:todolist/screens/home/components/add_list_button.dart';
 import 'package:todolist/screens/home/components/list_element.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -54,7 +53,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   return new ListElement(
                       listId: document.id,
                       listName: document.data()['nom'],
-                      listDeadLine: document.data()['deadLine'].toDate());
+                      listDeadLine: document.data()['deadLine'].toDate(),
+                      listTags: document.data()['tags'],
+                  );
                 }).toList();
 
                 return Scaffold(
