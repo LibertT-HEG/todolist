@@ -67,7 +67,7 @@ class _ListAddFormState extends State<ListAddForm> {
                   Column(mainAxisAlignment: MainAxisAlignment.start, children: [
             // TASK TITLE
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(5.0),
               child: TextFormField(
                 controller: listTitleInput,
                 decoration: const InputDecoration(
@@ -81,7 +81,7 @@ class _ListAddFormState extends State<ListAddForm> {
             ),
             // TASK DEADLINE
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(5.0),
               child: DateTimeField(
                 decoration: const InputDecoration(
                   labelText: 'Dead line',
@@ -97,7 +97,7 @@ class _ListAddFormState extends State<ListAddForm> {
             ),
             // TASK TAGS
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(5.0),
               child: TextFormField(
                 controller: listTagsInput,
                 decoration: const InputDecoration(
@@ -105,34 +105,36 @@ class _ListAddFormState extends State<ListAddForm> {
                   labelText: 'Tags',
                 ),
               ),
-            ),
-
-            ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    widget.todo.title = this.listTitleInput.text;
-                    if (this.listTagsInput.text.length > 0) {
-                      widget.todo.tags = this
-                          .listTagsInput
-                          .text
-                          .split(',')
-                          .map((tag) => tag.trim())
-                          .where((tag) => tag.length > 0)
-                          .toList();
-                    }
-                    if (widget.todo.documentReference == null) {
-                      addList().then((value) => {
-                            Navigator.popAndPushNamed(context, "/ListView",
-                                arguments: widget.todo)
-                          });
-                    } else {
-                      addList().then(
-                          (value) => {Navigator.of(context).pop(widget.todo)});
-                    }
-                  }
-                },
-                child: Icon(Icons.done_rounded, color: Color(0xFFFFFFFF)))
+            )
           ])),
-        ));
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              if (_formKey.currentState.validate()) {
+                widget.todo.title = this.listTitleInput.text;
+                if (this.listTagsInput.text.length > 0) {
+                  widget.todo.tags = this
+                      .listTagsInput
+                      .text
+                      .split(',')
+                      .map((tag) => tag.trim())
+                      .where((tag) => tag.length > 0)
+                      .toList();
+                }
+                if (widget.todo.documentReference == null) {
+                  addList().then((value) => {
+                        Navigator.popAndPushNamed(context, "/ListView",
+                            arguments: widget.todo)
+                      });
+                } else {
+                  addList().then(
+                      (value) => {Navigator.of(context).pop(widget.todo)});
+                }
+              }
+            },
+            child: Text("Valider"),
+          )
+        ]);
   }
 }

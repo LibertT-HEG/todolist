@@ -39,19 +39,19 @@ class _ListElementState extends State<ListElement> {
                                 DateFormat('dd MMMM yy à kk:mm')
                                     .format(widget.todo.dLine) +
                                 '\n')),
-                        Padding(
-                            padding: const EdgeInsets.only(bottom: 5.0),
-                            child: Tags(
-                              itemCount: widget.todo.tags.length,
-                              itemBuilder: (int index) {
-                                return ItemTags(
+                        Tags(
+                          itemCount: widget.todo.tags.length,
+                          itemBuilder: (int index) {
+                            return Padding(
+                                padding: const EdgeInsets.only(bottom: 5.0),
+                                child: ItemTags(
                                   key: Key(index.toString()),
                                   index: index,
                                   title: widget.todo.tags[index],
                                   pressEnabled: false,
-                                );
-                              },
-                            )),
+                                ));
+                          },
+                        ),
                       ])),
             ])));
   }

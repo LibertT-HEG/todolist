@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:todolist/classes/todo.dart';
 import 'package:todolist/classes/task.dart';
 import 'package:todolist/components/list_form.dart';
+import 'package:flutter_tags/flutter_tags.dart';
+import 'package:intl/intl.dart';
 
 class ListViewScreen extends StatefulWidget {
   @override
@@ -226,7 +228,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
               return Text("Loading");
             }
 
-            return new ListView(
+            return ListView(
                 children: snapshot.data.docs.map((DocumentSnapshot document) {
               return Row(children: [
                 Expanded(
@@ -263,6 +265,38 @@ class _ListViewScreenState extends State<ListViewScreen> {
               ]);
             }).toList());
           }),
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        child: Container(
+            height: 90.0,
+            child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(children: [
+                  Row(children: [
+                    Text('Dead line: ' +
+                        DateFormat('dd MMMM yy à kk:mm')
+                            .format(this.todo.dLine) +
+                        '\n')
+                  ]),
+                  Row(children: [
+                    Text("Tags : "),
+                    Tags(
+                      itemCount: this.todo.tags.length,
+                      itemBuilder: (int index) {
+                        return Padding(
+                            padding: const EdgeInsets.only(bottom: 5.0),
+                            child: ItemTags(
+                              key: Key(index.toString()),
+                              index: index,
+                              title: this.todo.tags[index],
+                              pressEnabled: false,
+                            ));
+                      },
+                    )
+                  ])
+                ]))),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showDialog(
