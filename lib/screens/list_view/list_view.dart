@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:todolist/classes/task.dart';
 
 class ListViewScreen extends StatefulWidget {
   @override
@@ -162,7 +162,32 @@ class _ListViewScreenState extends State<ListViewScreen> {
                   }
 
                   if (snapshot.connectionState == ConnectionState.done) {
-                    // Map<String, dynamic> data = snapshot.data.data();
+                    return IconButton(
+                      icon: Icon(Icons.edit),
+                      onPressed: () {
+                        confirmDelete().then((confirmed) => {
+                              if (confirmed)
+                                {
+                                  listes.doc(snapshot.data.id).delete(),
+                                  Navigator.pop(context)
+                                }
+                            });
+                      },
+                    );
+                  }
+
+                  return Text('Please wait');
+                }),
+            FutureBuilder(
+                future: listes.doc(args).get(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<DocumentSnapshot> snapshot) {
+                  // Check for errors
+                  if (snapshot.hasError) {
+                    return Text('Error');
+                  }
+
+                  if (snapshot.connectionState == ConnectionState.done) {
                     return IconButton(
                       icon: Icon(Icons.delete),
                       onPressed: () {
@@ -282,15 +307,5 @@ class _ListViewScreenState extends State<ListViewScreen> {
         ),
       ),
     );
-  }
-}
-
-class Task {
-  String nom;
-  bool fait;
-
-  Task(String nom) {
-    this.nom = nom;
-    this.fait = false;
   }
 }

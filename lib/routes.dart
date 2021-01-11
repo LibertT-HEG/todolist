@@ -6,7 +6,6 @@ import 'package:todolist/screens/list_add/list_add.dart';
 
 final Map<String, WidgetBuilder> routes = <String, WidgetBuilder>{
   "/": (BuildContext context) => HomeScreen(),
-  "/ListAdd": (BuildContext context) => ListAddScreen(),
   "/ListView": (BuildContext context) => ListViewScreen(),
   "/About": (BuildContext context) => AboutScreen(),
 };

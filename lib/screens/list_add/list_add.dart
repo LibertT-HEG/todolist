@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:todolist/screens/list_add/components/MyCustomForm.dart';
+import 'package:todolist/components/list_form.dart';
 
 class ListAddScreen extends StatefulWidget {
   @override
@@ -32,7 +32,7 @@ class _ListAddScreenState extends State<ListAddScreen> {
             appBar: AppBar(
               title: Text('Ajouter une liste'),
             ),
-            body: MyCustomForm(),
+            body: ListAddForm(),
           );
         }
 
@@ -45,25 +45,5 @@ class _ListAddScreenState extends State<ListAddScreen> {
         );
       },
     );
-  }
-}
-
-class Todo {
-  String title;
-  DateTime dLine;
-  List<String> tags;
-  DocumentReference documentReference;
-
-  Todo(String title, DateTime dLine) {
-    this.title = title;
-    this.dLine = dLine;
-    this.tags = [];
-    this.documentReference = null;
-  }
-
-  addTag(String tag) {
-    if (tag.length > 0) {
-      this.tags.add(tag);
-    }
   }
 }

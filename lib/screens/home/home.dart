@@ -35,7 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
-
           return StreamBuilder<QuerySnapshot>(
               stream: listes.snapshots(),
               builder: (BuildContext context,
@@ -51,10 +50,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 List<ListElement> listes =
                     snapshot.data.docs.map((DocumentSnapshot document) {
                   return new ListElement(
-                      listId: document.id,
-                      listName: document.data()['nom'],
-                      listDeadLine: document.data()['deadLine'].toDate(),
-                      listTags: document.data()['tags'],
+                    listId: document.id,
+                    listName: document.data()['nom'],
+                    listDeadLine: document.data()['deadLine'].toDate(),
+                    listTags: document.data()['tags'],
                   );
                 }).toList();
 
@@ -86,11 +85,5 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       },
     );
-
-
-
-
-
-
   }
 }

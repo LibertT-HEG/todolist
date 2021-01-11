@@ -2,18 +2,19 @@ import 'package:date_field/date_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:todolist/screens/list_add/list_add.dart';
-import 'package:todolist/screens/list_view/list_view.dart';
+import 'package:todolist/classes/todo.dart';
 
 // Define a custom Form widget.
-class MyCustomForm extends StatefulWidget {
+class ListAddForm extends StatefulWidget {
+  ListAddForm({todo: Todo});
+
   @override
-  _MyCustomFormState createState() => _MyCustomFormState();
+  _ListAddFormState createState() => _ListAddFormState();
 }
 
 // Define a corresponding State class.
 // This class holds the data related to the Form.
-class _MyCustomFormState extends State<MyCustomForm> {
+class _ListAddFormState extends State<ListAddForm> {
   // Create a text controller and use it to retrieve the current value
   // of the TextField.
   final listTitleInput = TextEditingController();
@@ -36,21 +37,30 @@ class _MyCustomFormState extends State<MyCustomForm> {
 
     Future<void> addList() {
       // Call the lists CollectionReference to add a new list
-      DocumentReference documentReference = listes.doc();
-      this.todo.documentReference = documentReference;
-      return documentReference.set({
+      if (this.todo.documentReference == null) {
+        DocumentReference documentReference = listes.doc();
+        this.todo.documentReference = documentReference;
+      }
+
+      return this.todo.documentReference.set({
         'nom': this.todo.title,
         'deadLine': this.todo.dLine,
         'tags': this.todo.tags
       });
-      // .then((value) => print("List Added"))
-      // .catchError((error) => print("Failed to add list: $error"));
     }
 
-    return Scaffold(
-      body: Form(
+    var title = (this.todo.documentReference == null)
+        ? "Nouvelle liste"
+        : "Modifier la liste";
+
+    return AlertDialog(
+        title: Text(title),
+        content: Form(
           key: _formKey,
-          child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+          child: SingleChildScrollView(
+              child:
+                  Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+            // TASK TITLE
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: TextFormField(
@@ -64,6 +74,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
                 },
               ),
             ),
+            // TASK DEADLINE
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: DateTimeField(
@@ -79,6 +90,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
                 selectedDate: this.todo.dLine,
               ),
             ),
+            // TASK TAGS
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: TextFormField(
@@ -89,25 +101,28 @@ class _MyCustomFormState extends State<MyCustomForm> {
                 ),
               ),
             ),
+
+            ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState.validate()) {
+                    this.todo.title = this.listTitleInput.text;
+                    if (this.listTagsInput.text.length > 0) {
+                      this.todo.tags = this
+                          .listTagsInput
+                          .text
+                          .split(',')
+                          .map((tag) => tag.trim())
+                          .where((tag) => tag.length > 0)
+                          .toList();
+                    }
+                    addList().then((value) => {
+                          Navigator.popAndPushNamed(context, "/ListView",
+                              arguments: this.todo.documentReference.id)
+                        });
+                  }
+                },
+                child: Icon(Icons.done_rounded, color: Color(0xFFFFFFFF)))
           ])),
-      floatingActionButton: FloatingActionButton(
-        // When the user presses the button, show an alert dialog containing the
-        // text that the user has entered into the text field.
-        onPressed: () {
-          if (_formKey.currentState.validate()) {
-            this.todo.title = this.listTitleInput.text;
-            if (this.listTagsInput.text.length > 0) {
-              this.todo.tags = this.listTagsInput.text.split(',');
-            }
-            addList().then((value) => {
-                  Navigator.popAndPushNamed(context, "/ListView",
-                      arguments: this.todo.documentReference.id)
-                });
-          }
-        },
-        tooltip: 'Ajouter',
-        child: Icon(Icons.done_rounded, color: Color(0xFFFFFFFF)),
-      ),
-    );
+        ));
   }
 }
