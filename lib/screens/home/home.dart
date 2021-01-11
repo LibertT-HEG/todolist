@@ -5,14 +5,14 @@ import 'package:todolist/screens/home/components/list_element.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:todolist/classes/todo.dart';
 
+final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
-
   @override
   Widget build(BuildContext context) {
     CollectionReference listes =
