@@ -16,14 +16,15 @@ class MyCustomForm extends StatefulWidget {
 class _MyCustomFormState extends State<MyCustomForm> {
   // Create a text controller and use it to retrieve the current value
   // of the TextField.
-  final myController = TextEditingController();
-  final myTags = TextEditingController();
+  final listTitleInput = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  final listTagsInput = TextEditingController();
   Todo todo = new Todo("test", DateTime.now());
 
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    myController.dispose();
+    listTitleInput.dispose();
     super.dispose();
   }
 
@@ -47,53 +48,62 @@ class _MyCustomFormState extends State<MyCustomForm> {
     }
 
     return Scaffold(
-      body: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: TextFormField(
-            controller: myController,
-            decoration: const InputDecoration(
-              hintText: 'Exemple: Voyage à LA',
-              labelText: 'Titre *',
+      body: Form(
+          key: _formKey,
+          child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: TextFormField(
+                controller: listTitleInput,
+                decoration: const InputDecoration(
+                  hintText: 'Exemple: Voyage à LA',
+                  labelText: 'Titre *',
+                ),
+                validator: (String value) {
+                  return value == null ? 'Requis' : null;
+                },
+              ),
             ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: DateTimeField(
-            decoration: const InputDecoration(
-              labelText: 'Dead line',
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: DateTimeField(
+                decoration: const InputDecoration(
+                  labelText: 'Dead line',
+                ),
+                onDateSelected: (DateTime value) {
+                  setState(() {
+                    this.todo.dLine = value;
+                  });
+                },
+                firstDate: DateTime.now(),
+                selectedDate: this.todo.dLine,
+              ),
             ),
-            onDateSelected: (DateTime value) {
-              setState(() {
-                this.todo.dLine = value;
-              });
-            },
-            firstDate: DateTime.now(),
-            selectedDate: this.todo.dLine,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: TextFormField(
-            controller: myTags,
-            decoration: const InputDecoration(
-              hintText: 'Ex: Ecole, Important, A faire...',
-              labelText: 'Tags',
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: TextFormField(
+                controller: listTagsInput,
+                decoration: const InputDecoration(
+                  hintText: 'Ex: Ecole, Important, A faire...',
+                  labelText: 'Tags',
+                ),
+              ),
             ),
-          ),
-        ),
-      ]),
+          ])),
       floatingActionButton: FloatingActionButton(
         // When the user presses the button, show an alert dialog containing the
         // text that the user has entered into the text field.
         onPressed: () {
-          this.todo.title = this.myController.text;
-          this.todo.tags = this.myTags.text.split(', ');
-          addList().then((value) => {
-                Navigator.popAndPushNamed(context, "/ListView",
-                    arguments: this.todo.documentReference.id)
-              });
+          if (_formKey.currentState.validate()) {
+            this.todo.title = this.listTitleInput.text;
+            if (this.listTagsInput.text.length > 0) {
+              this.todo.tags = this.listTagsInput.text.split(',');
+            }
+            addList().then((value) => {
+                  Navigator.popAndPushNamed(context, "/ListView",
+                      arguments: this.todo.documentReference.id)
+                });
+          }
         },
         tooltip: 'Ajouter',
         child: Icon(Icons.done_rounded, color: Color(0xFFFFFFFF)),

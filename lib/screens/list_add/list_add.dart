@@ -13,38 +13,37 @@ class _ListAddScreenState extends State<ListAddScreen> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        // Initialize FlutterFire:
-        future: _initialization,
-        builder: (context, snapshot) {
-      // Check for errors
-      if (snapshot.hasError) {
+      // Initialize FlutterFire:
+      future: _initialization,
+      builder: (context, snapshot) {
+        // Check for errors
+        if (snapshot.hasError) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('Error'),
+            ),
+            body: Text('Error'),
+          );
+        }
+
+        // Once complete, show your application
+        if (snapshot.connectionState == ConnectionState.done) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('Ajouter une liste'),
+            ),
+            body: MyCustomForm(),
+          );
+        }
+
+        // Otherwise, show something whilst waiting for initialization to complete
         return Scaffold(
           appBar: AppBar(
-            title: Text('Error'),
+            title: Text('Please wait'),
           ),
-          body: Text('Error'),
+          body: Text('Please wait'),
         );
-      }
-
-      // Once complete, show your application
-      if (snapshot.connectionState == ConnectionState.done) {
-        return Scaffold(
-          appBar: AppBar(
-            title: Text('Ajouter une liste'),
-          ),
-          body: MyCustomForm(),
-
-        );
-      }
-
-      // Otherwise, show something whilst waiting for initialization to complete
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('Please wait'),
-        ),
-        body: Text('Please wait'),
-      );
-    },
+      },
     );
   }
 }
@@ -62,7 +61,9 @@ class Todo {
     this.documentReference = null;
   }
 
-  add_tags(String tag) {
-    this.tags.add(tag);
+  addTag(String tag) {
+    if (tag.length > 0) {
+      this.tags.add(tag);
+    }
   }
 }

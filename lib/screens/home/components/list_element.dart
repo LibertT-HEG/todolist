@@ -45,17 +45,16 @@ class _ListElementState extends State<ListElement> {
                         Padding(
                             padding: const EdgeInsets.only(bottom: 5.0),
                             child: Tags(
-
                               itemCount: widget.listTags.length,
                               itemBuilder: (int index) {
                                 return ItemTags(
                                   key: Key(index.toString()),
                                   index: index,
                                   title: widget.listTags[index],
+                                  pressEnabled: false,
                                 );
                               },
-                            )
-                        ),
+                            )),
                       ])),
             ])));
   }
