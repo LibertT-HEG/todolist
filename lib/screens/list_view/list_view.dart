@@ -273,13 +273,12 @@ class _ListViewScreenState extends State<ListViewScreen> {
                 padding: const EdgeInsets.all(10.0),
                 child: Column(children: [
                   Row(children: [
-                    Text('Dead line: ' +
-                        DateFormat('dd MMMM yy à kk:mm')
+                    Text('Deadline: ' +
+                        DateFormat('dd MMMM yyyy à kk:mm')
                             .format(this.todo.dLine) +
                         '\n')
                   ]),
                   Row(children: [
-                    Text("Tags : "),
                     Tags(
                       itemCount: this.todo.tags.length,
                       itemBuilder: (int index) {

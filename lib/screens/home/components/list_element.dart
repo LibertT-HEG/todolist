@@ -26,6 +26,8 @@ class _ListElementState extends State<ListElement> {
             },
             child: Column(children: <Widget>[
               ListTile(
+                  contentPadding:
+                      const EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
                   title: Text(
                     widget.todo.title,
                     style: TextStyle(fontSize: 20),
@@ -35,8 +37,8 @@ class _ListElementState extends State<ListElement> {
                       children: <Widget>[
                         Padding(
                             padding: const EdgeInsets.only(top: 10.0),
-                            child: Text('Dead line: ' +
-                                DateFormat('dd MMMM yy à kk:mm')
+                            child: Text('Deadline: ' +
+                                DateFormat('dd MMMM yyyy à kk:mm')
                                     .format(widget.todo.dLine) +
                                 '\n')),
                         Tags(

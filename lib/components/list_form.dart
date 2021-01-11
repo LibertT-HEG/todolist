@@ -84,7 +84,7 @@ class _ListAddFormState extends State<ListAddForm> {
               padding: const EdgeInsets.all(5.0),
               child: DateTimeField(
                 decoration: const InputDecoration(
-                  labelText: 'Dead line',
+                  labelText: 'Deadline',
                 ),
                 onDateSelected: (DateTime value) {
                   setState(() {
