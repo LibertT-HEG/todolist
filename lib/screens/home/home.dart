@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:todolist/screens/home/components/add_list_button.dart';
 import 'package:todolist/screens/home/components/list_element.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:todolist/classes/todo.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -49,12 +50,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 List<ListElement> listes =
                     snapshot.data.docs.map((DocumentSnapshot document) {
-                  return new ListElement(
-                    listId: document.id,
-                    listName: document.data()['nom'],
-                    listDeadLine: document.data()['deadLine'].toDate(),
-                    listTags: document.data()['tags'],
-                  );
+                  Todo todoList = new Todo();
+                  todoList.title = document.data()['nom'];
+                  todoList.dLine = document.data()['deadLine'].toDate();
+                  todoList.documentId = document.id;
+                  todoList.tags = document.data()['tags'];
+
+                  return ListElement(todo: todoList);
                 }).toList();
 
                 return Scaffold(

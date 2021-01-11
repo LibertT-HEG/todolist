@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:todolist/classes/todo.dart';
 import 'package:todolist/classes/task.dart';
+import 'package:todolist/components/list_form.dart';
 
 class ListViewScreen extends StatefulWidget {
   @override
@@ -12,6 +14,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
   final _formKey = GlobalKey<FormState>();
   Task _task = new Task(null);
+  Todo todo = new Todo();
 
   Widget _taskForm(currentValue) {
     return TextFormField(
@@ -19,7 +22,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
       decoration: InputDecoration(labelText: "Nom de la tâche"),
       validator: (String value) {
         if (value.isEmpty) {
-          return "requis";
+          return "Requis";
         }
         return null;
       },
@@ -31,12 +34,16 @@ class _ListViewScreenState extends State<ListViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final String args = ModalRoute.of(context).settings.arguments;
+    this.todo = ModalRoute.of(context).settings.arguments;
 
     CollectionReference taches = FirebaseFirestore.instance
         .collection('Listes')
-        .doc(args)
+        .doc(this.todo.documentId)
         .collection("Taches");
+
+    this.todo.documentReference = FirebaseFirestore.instance
+        .collection('Listes')
+        .doc(this.todo.documentId);
 
     CollectionReference listes =
         FirebaseFirestore.instance.collection('Listes');
@@ -136,7 +143,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
     return Scaffold(
       appBar: AppBar(
           title: FutureBuilder(
-              future: listes.doc(args).get(),
+              future: listes.doc(this.todo.documentId).get(),
               builder: (BuildContext context,
                   AsyncSnapshot<DocumentSnapshot> snapshot) {
                 // Check for errors
@@ -153,7 +160,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
               }),
           actions: [
             FutureBuilder(
-                future: listes.doc(args).get(),
+                future: listes.doc(this.todo.documentId).get(),
                 builder: (BuildContext context,
                     AsyncSnapshot<DocumentSnapshot> snapshot) {
                   // Check for errors
@@ -165,12 +172,14 @@ class _ListViewScreenState extends State<ListViewScreen> {
                     return IconButton(
                       icon: Icon(Icons.edit),
                       onPressed: () {
-                        confirmDelete().then((confirmed) => {
-                              if (confirmed)
-                                {
-                                  listes.doc(snapshot.data.id).delete(),
-                                  Navigator.pop(context)
-                                }
+                        return showDialog<Todo>(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return ListAddForm(todo: this.todo);
+                            }).then((newValues) => {
+                              this.setState(() {
+                                this.todo = newValues;
+                              })
                             });
                       },
                     );
@@ -179,7 +188,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
                   return Text('Please wait');
                 }),
             FutureBuilder(
-                future: listes.doc(args).get(),
+                future: listes.doc(this.todo.documentId).get(),
                 builder: (BuildContext context,
                     AsyncSnapshot<DocumentSnapshot> snapshot) {
                   // Check for errors

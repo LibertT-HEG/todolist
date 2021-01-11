@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/components/list_form.dart';
+import 'package:todolist/classes/todo.dart';
 
 class AddListButton extends StatelessWidget {
   @override
@@ -9,7 +10,7 @@ class AddListButton extends StatelessWidget {
         return showDialog<bool>(
             context: context,
             builder: (BuildContext context) {
-              return ListAddForm(todo: null);
+              return ListAddForm(todo: new Todo());
             });
       },
       child: Icon(Icons.add, color: Colors.white),

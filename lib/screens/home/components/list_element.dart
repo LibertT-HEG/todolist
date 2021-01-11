@@ -3,14 +3,12 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_tags/flutter_tags.dart';
+import 'package:todolist/classes/todo.dart';
 
 class ListElement extends StatefulWidget {
-  String listId;
-  String listName;
-  DateTime listDeadLine;
-  List<dynamic> listTags;
+  Todo todo = new Todo();
 
-  ListElement({this.listId, this.listName, this.listDeadLine, this.listTags});
+  ListElement({this.todo});
 
   @override
   State<StatefulWidget> createState() => _ListElementState();
@@ -24,13 +22,12 @@ class _ListElementState extends State<ListElement> {
         child: InkWell(
             splashColor: Colors.blue.withAlpha(30),
             onTap: () {
-              Navigator.pushNamed(context, "/ListView",
-                  arguments: widget.listId);
+              Navigator.pushNamed(context, "/ListView", arguments: widget.todo);
             },
             child: Column(children: <Widget>[
               ListTile(
                   title: Text(
-                    widget.listName,
+                    widget.todo.title,
                     style: TextStyle(fontSize: 20),
                   ),
                   subtitle: Column(
@@ -40,17 +37,17 @@ class _ListElementState extends State<ListElement> {
                             padding: const EdgeInsets.only(top: 10.0),
                             child: Text('Dead line: ' +
                                 DateFormat('dd MMMM yy à kk:mm')
-                                    .format(widget.listDeadLine) +
+                                    .format(widget.todo.dLine) +
                                 '\n')),
                         Padding(
                             padding: const EdgeInsets.only(bottom: 5.0),
                             child: Tags(
-                              itemCount: widget.listTags.length,
+                              itemCount: widget.todo.tags.length,
                               itemBuilder: (int index) {
                                 return ItemTags(
                                   key: Key(index.toString()),
                                   index: index,
-                                  title: widget.listTags[index],
+                                  title: widget.todo.tags[index],
                                   pressEnabled: false,
                                 );
                               },

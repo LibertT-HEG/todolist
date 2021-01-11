@@ -6,7 +6,9 @@ import 'package:todolist/classes/todo.dart';
 
 // Define a custom Form widget.
 class ListAddForm extends StatefulWidget {
-  ListAddForm({todo: Todo});
+  Todo todo = new Todo();
+
+  ListAddForm({this.todo});
 
   @override
   _ListAddFormState createState() => _ListAddFormState();
@@ -20,8 +22,6 @@ class _ListAddFormState extends State<ListAddForm> {
   final listTitleInput = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final listTagsInput = TextEditingController();
-  Todo todo = new Todo("test", DateTime.now());
-
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
@@ -37,21 +37,26 @@ class _ListAddFormState extends State<ListAddForm> {
 
     Future<void> addList() {
       // Call the lists CollectionReference to add a new list
-      if (this.todo.documentReference == null) {
+      if (widget.todo.documentReference == null) {
         DocumentReference documentReference = listes.doc();
-        this.todo.documentReference = documentReference;
+        widget.todo.documentReference = documentReference;
       }
 
-      return this.todo.documentReference.set({
-        'nom': this.todo.title,
-        'deadLine': this.todo.dLine,
-        'tags': this.todo.tags
+      widget.todo.documentId = widget.todo.documentReference.id;
+
+      return widget.todo.documentReference.set({
+        'nom': widget.todo.title,
+        'deadLine': widget.todo.dLine,
+        'tags': widget.todo.tags
       });
     }
 
-    var title = (this.todo.documentReference == null)
+    var title = (widget.todo.documentReference == null)
         ? "Nouvelle liste"
         : "Modifier la liste";
+
+    this.listTitleInput.text = widget.todo.title;
+    this.listTagsInput.text = widget.todo.tags.join(",");
 
     return AlertDialog(
         title: Text(title),
@@ -83,11 +88,11 @@ class _ListAddFormState extends State<ListAddForm> {
                 ),
                 onDateSelected: (DateTime value) {
                   setState(() {
-                    this.todo.dLine = value;
+                    widget.todo.dLine = value;
                   });
                 },
                 firstDate: DateTime.now(),
-                selectedDate: this.todo.dLine,
+                selectedDate: widget.todo.dLine,
               ),
             ),
             // TASK TAGS
@@ -105,9 +110,9 @@ class _ListAddFormState extends State<ListAddForm> {
             ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState.validate()) {
-                    this.todo.title = this.listTitleInput.text;
+                    widget.todo.title = this.listTitleInput.text;
                     if (this.listTagsInput.text.length > 0) {
-                      this.todo.tags = this
+                      widget.todo.tags = this
                           .listTagsInput
                           .text
                           .split(',')
@@ -115,10 +120,15 @@ class _ListAddFormState extends State<ListAddForm> {
                           .where((tag) => tag.length > 0)
                           .toList();
                     }
-                    addList().then((value) => {
-                          Navigator.popAndPushNamed(context, "/ListView",
-                              arguments: this.todo.documentReference.id)
-                        });
+                    if (widget.todo.documentReference == null) {
+                      addList().then((value) => {
+                            Navigator.popAndPushNamed(context, "/ListView",
+                                arguments: widget.todo)
+                          });
+                    } else {
+                      addList().then(
+                          (value) => {Navigator.of(context).pop(widget.todo)});
+                    }
                   }
                 },
                 child: Icon(Icons.done_rounded, color: Color(0xFFFFFFFF)))
