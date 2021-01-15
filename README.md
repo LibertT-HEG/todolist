@@ -1,16 +1,14 @@
-# todolist
+# ToutDouxListe
+Projet Flutter du cours développement mobile de la HEG Arc du groupe B (Gaétan Hirschy, Vincent Zurbrügg, Antoine Frey, Thibault Libert)
 
-A new Flutter project.
+## Objectifs
+* ✅ CRUD de liste de chose à faire (todolist)
+* ✅ Afficher la liste de ses todolist avec son titre, ses libellés (tags), sa date de fin
+* ✅ Afficher le détail d'une todolist
+* ✅ Chaque élément de liste doit contenir un titre
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Bonus
+* ❌ Une notification se déclenche quand la date de fin arrive
+* ❌ Une image peut être ajoutée à la liste par l'utilisateur (appareil photo ou galerie)
+* ❌ La couleur de fond peut être changée
+* ✅ Il est possible de créer une todolist avec un bouton flottant (FAB)
