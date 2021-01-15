@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
   Intl.defaultLocale = "fr_FR";
   initializeDateFormatting();
