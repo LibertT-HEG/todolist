@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:todolist/screens/home/components/add_list_button.dart';
 import 'package:todolist/screens/home/components/list_element.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:todolist/classes/todo.dart';
+
+final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -11,8 +13,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
-
   @override
   Widget build(BuildContext context) {
     CollectionReference listes =
@@ -36,7 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
-
           return StreamBuilder<QuerySnapshot>(
               stream: listes.snapshots(),
               builder: (BuildContext context,
@@ -51,10 +50,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 List<ListElement> listes =
                     snapshot.data.docs.map((DocumentSnapshot document) {
-                  return new ListElement(
-                      listId: document.id,
-                      listName: document.data()['nom'],
-                      listDeadLine: document.data()['deadLine'].toDate());
+                  Todo todoList = new Todo();
+                  todoList.title = document.data()['nom'];
+                  todoList.dLine = document.data()['deadLine'].toDate();
+                  todoList.documentId = document.id;
+                  todoList.tags = document.data()['tags'];
+
+                  return ListElement(todo: todoList);
                 }).toList();
 
                 return Scaffold(
@@ -85,11 +87,5 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       },
     );
-
-
-
-
-
-
   }
 }
