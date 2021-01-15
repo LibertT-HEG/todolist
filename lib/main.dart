@@ -1,6 +1,19 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
+=======
+import 'package:todolist/routes.dart';
+import 'package:todolist/theme/style.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
+>>>>>>> dev
 
-void main() {
+void main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+  Intl.defaultLocale = "fr_FR";
+  initializeDateFormatting();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -8,6 +21,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -112,6 +126,42 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+=======
+    return FutureBuilder(
+      // Initialize FlutterFire:
+      future: Firebase.initializeApp(),
+      builder: (context, snapshot) {
+        // Check for errors
+        if (snapshot.hasError) {
+          return MaterialApp(
+            // TODO: une nouvelle page d'error
+            title: 'ToutDoux Liste',
+            theme: appTheme(),
+            initialRoute: '/',
+            routes: routes,
+          );
+        }
+
+        // Once complete, show your application
+        if (snapshot.connectionState == ConnectionState.done) {
+          return MaterialApp(
+            title: 'ToutDoux Liste',
+            theme: appTheme(),
+            initialRoute: '/',
+            routes: routes,
+          );
+        }
+
+        // Otherwise, show something whilst waiting for initialization to complete
+        return MaterialApp(
+          // TODO: une nouvelle loading page
+          title: 'ToutDoux Liste',
+          theme: appTheme(),
+          initialRoute: '/',
+          routes: routes,
+        );
+      },
+>>>>>>> dev
     );
   }
 }
